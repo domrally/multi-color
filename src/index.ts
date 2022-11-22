@@ -1,0 +1,1 @@
+export { MultiColor } from './MultiColor'

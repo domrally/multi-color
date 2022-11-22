@@ -1,0 +1,101 @@
+body {
+	inset: 0;
+	position: absolute;
+	display: grid;
+	place-items: center;
+	background: #555;
+}
+
+.background {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+}
+
+:root {
+	font-size: 1.6em;
+}
+
+a {
+	width: 2rem;
+	padding-top: 3rem;
+	cursor: pointer;
+	display: grid;
+	place-content: center;
+}
+
+nav {
+	display: grid;
+	grid-auto-flow: column;
+	grid-gap: 3rem;
+}
+
+a[href*='github'] {
+	background: url(./github.svg) no-repeat;
+}
+
+a[href*='npm'] {
+	background: url(./npm.svg) no-repeat;
+}
+
+* {
+	box-sizing: border-box;
+	font-family: monospace;
+	color: #fff;
+	margin: 0;
+	cursor: default;
+}
+
+*::selection {
+	background: #fff1;
+}
+
+h1 {
+	font-size: 4rem;
+	text-align: center;
+}
+
+button {
+	background: #333;
+	border: none;
+	border-radius: 0.5rem;
+	font-size: 1rem;
+	padding: 0.5rem;
+	width: 22ch;
+	cursor: pointer;
+	display: grid;
+	justify-items: start;
+}
+
+button * {
+	cursor: pointer;
+}
+:is(button, a) {
+	transition-property: background, box-shadow, color;
+	transition: 0.3s;
+	color: #ddd;
+}
+div,
+pre,
+span {
+	color: inherit;
+	font-size: inherit;
+}
+:is(button, a):hover {
+	color: #fff;
+}
+
+button:hover {
+	background-color: #000;
+}
+
+button:focus {
+	color: #000;
+}
+
+span {
+	transition: background 0.3s;
+}
+:focus span {
+	background: #fff;
+}

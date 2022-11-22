@@ -1,0 +1,13 @@
+{
+	"extends": "@tsconfig/node18-strictest/tsconfig.json",
+	"display": "oddball",
+	"include": ["src/**/*", "test/**/*"],
+	"compilerOptions": {
+		"declaration": true,
+		"declarationDir": "typings",
+		"lib": ["dom"],
+		"module": "ESNext",
+		"outDir": "dist",
+		"target": "ESNext"
+	}
+}

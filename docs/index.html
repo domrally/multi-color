@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>multi-color • gradients</title>
+
+		<meta charset="utf-8" />
+
+		<!-- <link rel="icon" href="./icon.png" /> -->
+		<link rel="stylesheet" href="./stylesheet.css" />
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/multi-color"
+			type="module"
+		></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script>
+	</head>
+
+	<body>
+		<multi-color class="background"></multi-color>
+
+		<h1>multi-color</h1>
+
+		<nav>
+			<a href="https://github.com/domrally/multi-color" target="_blank"
+				>github</a
+			>
+			<a href="https://www.npmjs.com/package/multi-color" target="_blank"
+				>npm</a
+			>
+		</nav>
+
+		<button data-clipboard-text="npm i multi-color">
+			<span>npm i multi-color</span>
+		</button>
+
+		<button
+			data-clipboard-text="&lt;multi-color&#10;&#9;nw='#0ff'&#10;&#9;ne='#f0f'&#10;&#9;sw='f0f'&#10;&#9;se='00f'&gt;&#10;&lt;/multi-color&gt;"
+		>
+			<div><span>&ltmulti-color</span></div>
+			<div><span>&nbsp;&nbsp;&nbsp;nw="#0ff"</span></div>
+			<div><span>&nbsp;&nbsp;&nbsp;ne="#f0f"</span></div>
+			<div><span>&nbsp;&nbsp;&nbsp;sw="f0f"</span></div>
+			<div><span>&nbsp;&nbsp;&nbsp;se="00f"</span></div>
+			<div><span>&gt&lt/multi-color&gt</span></div>
+		</button>
+
+		<script>
+			new ClipboardJS('button')
+		</script>
+	</body>
+</html>

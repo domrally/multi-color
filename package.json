@@ -1,0 +1,52 @@
+{
+	"name": "multi-color",
+	"version": "0.0.1",
+	"description": "false color gradients in elements and maps",
+	"main": "index.js",
+	"scripts": {
+		"restart": "node --no-warnings --experimental-modules --loader ts-node/esm --inspect --experimental-specifier-resolution=node",
+		"prestart": "rm -rf typings && npx tsc",
+		"start": "rollup dist/src/index.js --compact -f es -o docs/index.js && terser index.js -c -m --mangle-props --module --toplevel -f semicolons=false -o index.js",
+		"poststart": "mv typings/src/* typings && rm -rf dist && rm -rf typings/test && rm -rf typings/src",
+		"pretest": "npx eslint && npx prettier --check .",
+		"stop": "npm update && npx eslint --fix && npx prettier --write .",
+		"test": "npm restart test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/domrally/multi-color.git"
+	},
+	"keywords": [
+		"gradient",
+		"map",
+		"ramp",
+		"false",
+		"pseudo",
+		"element",
+		"palette",
+		"scheme"
+	],
+	"author": "Dom Mandy",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/domrally/multi-color/issues"
+	},
+	"homepage": "https://domrally.github.io/multi-color",
+	"devDependencies": {
+		"@fastify/static": "*",
+		"@tsconfig/node18-strictest": "*",
+		"@types/node": "*",
+		"@typescript-eslint/eslint-plugin": "*",
+		"@typescript-eslint/parser": "*",
+		"eslint": "*",
+		"eslint-config-alloy": "*",
+		"eslint-config-prettier": "*",
+		"fastify": "*",
+		"prettier": "*",
+		"rollup": "*",
+		"terser": "*",
+		"ts-node": "*",
+		"typescript": "*"
+	},
+	"type": "module"
+}
