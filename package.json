@@ -1,13 +1,13 @@
 {
 	"name": "multi-color",
 	"version": "0.0.1",
-	"description": "false color gradients in elements and maps",
+	"description": "false color gradients",
 	"main": "index.js",
 	"scripts": {
 		"restart": "node --no-warnings --experimental-modules --loader ts-node/esm --inspect --experimental-specifier-resolution=node",
 		"prestart": "rm -rf typings && npx tsc",
-		"start": "rollup dist/src/index.js --compact -f es -o docs/index.js && terser index.js -c -m --mangle-props --module --toplevel -f semicolons=false -o index.js",
-		"poststart": "mv typings/src/* typings && rm -rf dist && rm -rf typings/test && rm -rf typings/src",
+		"start": "rollup -c && terser index.js -c -m --mangle-props --module --toplevel -f semicolons=false -o index.js",
+		"poststart": "rm -rf typings/test && mv typings/src/* typings && rm -rf dist && rm -rf typings/test && rm -rf typings/src",
 		"pretest": "npx eslint && npx prettier --check .",
 		"stop": "npm update && npx eslint --fix && npx prettier --write .",
 		"test": "npm restart test"
@@ -32,8 +32,12 @@
 		"url": "https://github.com/domrally/multi-color/issues"
 	},
 	"homepage": "https://domrally.github.io/multi-color",
+	"dependencies": {
+		"colorjs.io": "*"
+	},
 	"devDependencies": {
 		"@fastify/static": "*",
+		"@rollup/plugin-node-resolve": "*",
 		"@tsconfig/node18-strictest": "*",
 		"@types/node": "*",
 		"@typescript-eslint/eslint-plugin": "*",

@@ -1,12 +1,9 @@
-import { GammaCorrection } from './GammaCorrection'
-import { Linearize } from './Linearize'
-import { Oklab } from './Oklab'
+import Color from 'colorjs.io'
 import { Polar } from './Polar'
-import { Rgb } from './Rgb'
 import { Srgb } from './Srgb'
 
 /**
- *
+ * A four corner gradient in cylindrical OkLab color space
  */
 export class MultiColor extends HTMLElement {
 	constructor() {
@@ -17,17 +14,15 @@ export class MultiColor extends HTMLElement {
 			'<style>canvas{position:absolute;inset:0;width:100%;height:100%;}</style><canvas></canvas><slot></slot>'
 		const canvas = shadowRoot.querySelector('canvas') as HTMLCanvasElement,
 			context = canvas.getContext('2d')!,
-			redraw = () =>
-				draw(context, [
-					{ r: 0, g: 1, b: 1, a: 1 },
-					{ r: 1, g: 0, b: 1, a: 1 },
-					{ r: 1, g: 0, b: 1, a: 1 },
-					{ r: 0, g: 0, b: 1, a: 1 },
-					// this.getAttribute('nw')!,
-					// this.getAttribute('ne')!,
-					// this.getAttribute('sw')!,
-					// this.getAttribute('se')!,
-				])
+			redraw = () => {
+				const style = getComputedStyle(this),
+					nw = new Color(style.getPropertyValue('--nw') || '#0000'),
+					ne = new Color(style.getPropertyValue('--ne') || '#0000'),
+					sw = new Color(style.getPropertyValue('--sw') || '#0000'),
+					se = new Color(style.getPropertyValue('--se') || '#0000')
+
+				draw(context, [nw, ne, sw, se])
+			}
 
 		new ResizeObserver(redraw).observe(this)
 		new MutationObserver(redraw).observe(this, {
@@ -44,21 +39,16 @@ customElements.define('multi-color', MultiColor)
  * @param element -
  * @returns
  */
-function draw(
-	context: CanvasRenderingContext2D,
-	corners: { r: number; g: number; b: number; a: number }[]
-) {
+function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 	context.canvas.width = context.canvas.clientWidth
 	context.canvas.height = context.canvas.clientHeight
 
 	const { width, height } = context.canvas,
 		imageData = context.getImageData(0, 0, width, height),
 		{ data } = imageData,
-		[nw, ne, sw, se] = corners.map(srgba => {
-			const [r, g, b, a] = Linearize(srgba.r, srgba.g, srgba.b, srgba.a),
-				lab = Oklab({ r: r!, g: g!, b: b! })
-
-			return [lab.L, lab.a, lab.b, a]
+		[nw, ne, sw, se] = corners.map(color => {
+			const [L, a, b] = color.to('oklab', { inGamut: true }).coords
+			return [L, a, b, color.alpha]
 		}),
 		nW = Polar({ a: nw![1]!, b: nw![2]! }).C,
 		nE = Polar({ a: ne![1]!, b: ne![2]! }).C,
@@ -67,10 +57,12 @@ function draw(
 
 	for (let i = 0; i < width; i++) {
 		for (let j = 0; j < height; j++) {
+			// parameterize the rectangle
 			const p = i / width,
 				q = j / height,
 				lcha = new Array<number>(4)
 
+			// linear interpolation
 			for (let k = 0; k < 4; k++) {
 				lcha[k] =
 					nw![k]! * (1 - p) * (1 - q) +
@@ -79,35 +71,34 @@ function draw(
 					se![k]! * p * q
 			}
 
-			const { C } = Polar({ a: lcha[1]!, b: lcha[2]! }),
+			// transform to polar interpolation
+			let [L, a, b, alpha] = lcha,
+				{ C } = Polar({ a: a!, b: b! }),
 				thing =
 					nW * (1 - p) * (1 - q) +
 					nE * p * (1 - q) +
 					sW * q * (1 - p) +
 					sE * p * q
+			a! *= thing / C
+			b! *= thing / C
 
-			lcha[1] *= thing / C
-			lcha[2] *= thing / C
+			const // transform from OkLab to sRGB space
+				sRGB = Srgb({ L: L!, a: a!, b: b! }),
+				// gamma correction for display
+				[red, green, blue] = sRGB.map(x => Math.pow(x, 2.2)),
+				// coordinate pixel indices
+				x = j * (width * 4) + i * 4,
+				[y, z, w] = [x + 1, x + 2, x + 3]
 
-			const //
-				rgba = Rgb({ L: lcha[0]!, a: lcha[1]!, b: lcha[2]! }),
-				srgba = Srgb(rgba.r, rgba.g, rgba.b, lcha[3]!),
-				display = GammaCorrection(...srgba),
-				[r, g, b, t] = display,
-				[x, y, z, w] = getColorIndicesForCoord(i, j, width)
-
-			data[x!] = r! * 255
-			data[y!] = g! * 255
-			data[z!] = b! * 255
-			data[w!] = t! * 255
+			// set pixel values
+			data[x!] = red! * 255
+			data[y!] = green! * 255
+			data[z!] = blue! * 255
+			data[w!] = alpha! * 255
 		}
 	}
 
+	// draw image
 	imageData.data.set(data)
 	context.putImageData(imageData, 0, 0)
-}
-
-function getColorIndicesForCoord(x: number, y: number, width: number) {
-	const red = y * (width * 4) + x * 4
-	return [red, red + 1, red + 2, red + 3]
 }

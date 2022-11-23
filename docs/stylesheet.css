@@ -1,19 +1,29 @@
+:root {
+	font-size: 4em;
+}
+
+@media (min-width: 600px) {
+	:root {
+		font-size: 1.6em;
+	}
+}
+
 body {
-	inset: 0;
-	position: absolute;
+	height: 100vh;
 	display: grid;
 	place-items: center;
 	background: #555;
+	padding: 2em 0;
 }
 
-.background {
+multi-color {
 	position: absolute;
 	inset: 0;
 	z-index: -1;
-}
-
-:root {
-	font-size: 1.6em;
+	--nw: #0ff;
+	--ne: #f0f;
+	--sw: #f0f;
+	--se: #00f;
 }
 
 a {

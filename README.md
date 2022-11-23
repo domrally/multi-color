@@ -1,26 +1,24 @@
 # multi-color
 
-false color gradients in elements and maps
-
-<details>
-	<summary>*contents*</summary>
-
-    - [features](#features)
-    - [use](#use)
-      -[node](#node)
-    	-[browser](#browser)
-
-</details>
+false color gradients
 
 ## features
 
-- 0 dependencies
-- css color inputs
-- cylindrical interpolation
 - linear Ok Lab space
 - gamma corrected mapping
+- css color inputs using colorjs.io
+- cylindrical interpolation
 
 ## use
+
+```css
+multi-color {
+	--nw: #0ff;
+	--ne: #f0f;
+	--sw: #f0f;
+	--se: #00f;
+}
+```
 
 ### node
 
@@ -30,9 +28,7 @@ npm i multi-color
 
 ```jsx
 export function Background() {
-	return (
-		<multi-color nw={'#f0f'} sw={'#ff0'} se={'0f0'} ne={'#0ff'}></multi-color>
-	)
+	return <multi-color></multi-color>
 }
 ```
 
@@ -44,6 +40,6 @@ export function Background() {
 </head>
 
 <body>
-	<multi-color nw="#0ff" ne="#f0f" sw="f0f" se="00f"> </multi-color>
+	<multi-color></multi-color>
 </body>
 ```
