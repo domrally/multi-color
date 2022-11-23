@@ -1,6 +1,6 @@
 {
 	"name": "multi-color",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "false color gradients",
 	"main": "index.js",
 	"scripts": {
