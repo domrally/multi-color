@@ -1,22 +1,22 @@
 # multi-color
 
-false color gradients
+visually balanced gradients
 
 ## features
 
-- linear Ok Lab space
-- gamma corrected mapping
-- css color inputs using colorjs.io
-- cylindrical interpolation
+- gamma corrected sRGB display mapping
+- cyclindrical Ok Lab interpolation space
+- css input supported by colorjs.io
+- dual css gradient fallback
 
 ## use
 
 ```css
 multi-color {
-	--nw: #0ff;
-	--ne: #f0f;
-	--sw: #f0f;
-	--se: #00f;
+	--background-top-left-color: #0ff;
+	--background-top-right-color: #f0f;
+	--background-bottom-left-color: #f0f;
+	--background-bottom-right-color: #00f;
 }
 ```
 
@@ -27,7 +27,7 @@ npm i multi-color
 ```
 
 ```jsx
-export function Background() {
+export default function () {
 	return <multi-color></multi-color>
 }
 ```
@@ -35,11 +35,13 @@ export function Background() {
 ### browser
 
 ```html
-<head>
-	<script src="https://cdn.jsdelivr.net/npm/multi-color"></script>
-</head>
+<html>
+	<head>
+		<script src="https://cdn.jsdelivr.net/npm/multi-color"></script>
+	</head>
 
-<body>
-	<multi-color></multi-color>
-</body>
+	<body>
+		<multi-color></multi-color>
+	</body>
+</html>
 ```

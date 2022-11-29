@@ -16,12 +16,20 @@ export class MultiColor extends HTMLElement {
 			context = canvas.getContext('2d')!,
 			redraw = () => {
 				const style = getComputedStyle(this),
-					nw = new Color(style.getPropertyValue('--nw') || '#0000'),
-					ne = new Color(style.getPropertyValue('--ne') || '#0000'),
-					sw = new Color(style.getPropertyValue('--sw') || '#0000'),
-					se = new Color(style.getPropertyValue('--se') || '#0000')
+					topLeft = new Color(
+						style.getPropertyValue('--background-top-left-color') || '#0000'
+					),
+					topRight = new Color(
+						style.getPropertyValue('--background-top-right-color') || '#0000'
+					),
+					bottomLeft = new Color(
+						style.getPropertyValue('--background-bottom-left-color') || '#0000'
+					),
+					bottomRight = new Color(
+						style.getPropertyValue('--background-bottom-right-color') || '#0000'
+					)
 
-				draw(context, [nw, ne, sw, se])
+				draw(context, [topLeft, topRight, bottomLeft, bottomRight])
 			}
 
 		new ResizeObserver(redraw).observe(this)
@@ -46,14 +54,14 @@ function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 	const { width, height } = context.canvas,
 		imageData = context.getImageData(0, 0, width, height),
 		{ data } = imageData,
-		[nw, ne, sw, se] = corners.map(color => {
+		[topLeft, topRight, bottomLeft, bottomRight] = corners.map(color => {
 			const [L, a, b] = color.to('oklab', { inGamut: true }).coords
 			return [L, a, b, color.alpha]
 		}),
-		nW = Polar({ a: nw![1]!, b: nw![2]! }).C,
-		nE = Polar({ a: ne![1]!, b: ne![2]! }).C,
-		sW = Polar({ a: sw![1]!, b: sw![2]! }).C,
-		sE = Polar({ a: se![1]!, b: se![2]! }).C
+		nW = Polar({ a: topLeft![1]!, b: topLeft![2]! }).C,
+		nE = Polar({ a: topRight![1]!, b: topRight![2]! }).C,
+		sW = Polar({ a: bottomLeft![1]!, b: bottomLeft![2]! }).C,
+		sE = Polar({ a: bottomRight![1]!, b: bottomRight![2]! }).C
 
 	for (let i = 0; i < width; i++) {
 		for (let j = 0; j < height; j++) {
@@ -65,10 +73,10 @@ function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 			// linear interpolation
 			for (let k = 0; k < 4; k++) {
 				lcha[k] =
-					nw![k]! * (1 - p) * (1 - q) +
-					ne![k]! * p * (1 - q) +
-					sw![k]! * q * (1 - p) +
-					se![k]! * p * q
+					topLeft![k]! * (1 - p) * (1 - q) +
+					topRight![k]! * p * (1 - q) +
+					bottomLeft![k]! * q * (1 - p) +
+					bottomRight![k]! * p * q
 			}
 
 			// transform to polar interpolation

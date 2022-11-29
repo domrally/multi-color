@@ -20,10 +20,10 @@ multi-color {
 	position: absolute;
 	inset: 0;
 	z-index: -1;
-	--nw: #0ff;
-	--ne: #f0f;
-	--sw: #f0f;
-	--se: #00f;
+	--background-top-left-color: #0ff;
+	--background-top-right-color: #f0f;
+	--background-bottom-left-color: #f0f;
+	--background-bottom-right-color: #00f;
 }
 
 a {
@@ -66,7 +66,7 @@ h1 {
 }
 
 button {
-	background: #333;
+	background: #202020;
 	border: none;
 	border-radius: 0.5rem;
 	font-size: 1rem;
