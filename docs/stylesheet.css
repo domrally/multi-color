@@ -10,15 +10,26 @@
 
 body {
 	height: 100vh;
+	height: 100svh;
 	display: grid;
 	place-items: center;
-	background: #555;
 	padding: 2em 0;
+	overflow-x: hidden;
 }
-
-multi-color {
+@keyframes gradient {
+	100% {
+		background-position: right;
+	}
+}
+.background {
 	position: absolute;
 	inset: 0;
+	background-size: 300% 100%;
+	animation-name: gradient;
+	animation-duration: 16s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
 	z-index: -1;
 	--background-top-left-color: #0ff;
 	--background-top-right-color: #f0f;
@@ -54,15 +65,25 @@ a[href*='npm'] {
 	color: #fff;
 	margin: 0;
 	cursor: default;
+	-webkit-font-smoothing: auto;
+	-moz-osx-font-smoothing: auto;
 }
 
 *::selection {
 	background: #fff1;
 }
 
-h1 {
+.title {
 	font-size: 4rem;
+	font-weight: 900;
+	color: transparent;
+	background-clip: text;
 	text-align: center;
+	display: inline;
+	--background-top-left-color: #ffa;
+	--background-top-right-color: #fff;
+	--background-bottom-left-color: #fff;
+	--background-bottom-right-color: #fff;
 }
 
 button {
@@ -71,7 +92,7 @@ button {
 	border-radius: 0.5rem;
 	font-size: 1rem;
 	padding: 0.5rem;
-	width: 22ch;
+	width: 45ch;
 	cursor: pointer;
 	display: grid;
 	justify-items: start;

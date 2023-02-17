@@ -3,14 +3,20 @@
 	"version": "0.0.3",
 	"description": "false color gradients",
 	"main": "index.js",
+	"files": [
+		"typings/**/*"
+	],
+	"exports": {
+		".": "./index.js"
+	},
 	"scripts": {
 		"restart": "node --no-warnings --experimental-modules --loader ts-node/esm --inspect --experimental-specifier-resolution=node",
 		"prestart": "rm -rf typings && npx tsc",
 		"start": "rollup -c && terser index.js -c -m --mangle-props --module --toplevel -f semicolons=false -o index.js",
 		"poststart": "rm -rf typings/test && mv typings/src/* typings && rm -rf dist && rm -rf typings/test && rm -rf typings/src",
-		"pretest": "npx eslint && npx prettier --check .",
 		"stop": "npm update && npx eslint --fix && npx prettier --write .",
-		"test": "npm restart test"
+		"pretest": "npx eslint && npx prettier --check .",
+		"test": "npx pm2 start 'npm restart test' --watch"
 	},
 	"repository": {
 		"type": "git",
@@ -46,6 +52,7 @@
 		"eslint-config-alloy": "*",
 		"eslint-config-prettier": "*",
 		"fastify": "*",
+		"pm2": "*",
 		"prettier": "*",
 		"rollup": "*",
 		"terser": "*",

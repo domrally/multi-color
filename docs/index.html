@@ -8,18 +8,19 @@
 		<!-- <link rel="icon" href="./icon.png" /> -->
 		<link rel="stylesheet" href="./stylesheet.css" />
 
-		<script
-			src="https://cdn.jsdelivr.net/npm/multi-color"
-			type="module"
-		></script>
-
 		<script src="https://cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script>
+		<!-- <script src="./index.js" type="module">
+			console.log('multi-color')
+		</script> -->
+		<script type="module">
+			import './index.js'
+		</script>
 	</head>
 
 	<body>
 		<multi-color class="background"></multi-color>
 
-		<h1>multi-color</h1>
+		<multi-color class="title">multi-color</multi-color>
 
 		<h2>visually balanced gradients</h2>
 

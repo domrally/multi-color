@@ -9,9 +9,24 @@ export class MultiColor extends HTMLElement {
 	constructor() {
 		super()
 
-		const shadowRoot = this.attachShadow({ mode: 'open' })
-		shadowRoot.innerHTML =
-			'<style>canvas{position:absolute;inset:0;width:100%;height:100%;}</style><canvas></canvas><slot></slot>'
+		const shadowRoot = this.attachShadow({ mode: 'closed' })
+		shadowRoot.innerHTML = `
+			<style>
+				:host {
+					position: relative;
+				}
+
+				canvas { 
+					position: absolute;
+					inset: 0;
+					width: 100%;
+					height: 100%;
+					visibility: hidden;
+				}
+			</style>
+			<canvas></canvas>
+			<slot></slot>
+		`
 		const canvas = shadowRoot.querySelector('canvas') as HTMLCanvasElement,
 			context = canvas.getContext('2d')!,
 			redraw = () => {
@@ -29,7 +44,12 @@ export class MultiColor extends HTMLElement {
 						style.getPropertyValue('--background-bottom-right-color') || '#0000'
 					)
 
-				draw(context, [topLeft, topRight, bottomLeft, bottomRight])
+				this.style.backgroundImage = draw(context, [
+					topLeft,
+					topRight,
+					bottomLeft,
+					bottomRight,
+				])
 			}
 
 		new ResizeObserver(redraw).observe(this)
@@ -109,4 +129,10 @@ function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 	// draw image
 	imageData.data.set(data)
 	context.putImageData(imageData, 0, 0)
+
+	// export image to data url
+	const dataUrl = context.canvas.toDataURL()
+
+	// set background image
+	return `url(${dataUrl})`
 }

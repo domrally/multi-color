@@ -8,6 +8,7 @@ visually balanced gradients
 - cyclindrical Ok Lab interpolation space
 - css input supported by colorjs.io
 - dual css gradient fallback
+- minified by default
 
 ## use
 
@@ -37,7 +38,7 @@ export default function () {
 ```html
 <html>
 	<head>
-		<script src="https://cdn.jsdelivr.net/npm/multi-color"></script>
+		<script src="https://cdn.jsdelivr.net/npm/multi-color/index.js"></script>
 	</head>
 
 	<body>
