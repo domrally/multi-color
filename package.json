@@ -12,7 +12,7 @@
 	"scripts": {
 		"restart": "node --no-warnings --experimental-modules --loader ts-node/esm --inspect --experimental-specifier-resolution=node",
 		"prestart": "rm -rf typings && npx tsc",
-		"start": "rollup -c && terser index.js -c -m --mangle-props --module --toplevel -f semicolons=false -o index.js",
+		"start": "rollup -c && terser index.js -c --mangle-props --module --toplevel -f semicolons=false -o index.js",
 		"poststart": "rm -rf typings/test && mv typings/src/* typings && rm -rf dist && rm -rf typings/test && rm -rf typings/src",
 		"stop": "npm update && npx eslint --fix && npx prettier --write .",
 		"pretest": "npx eslint && npx prettier --check .",
