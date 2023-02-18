@@ -32,9 +32,9 @@ body {
 	animation-direction: alternate;
 	z-index: -1;
 	--background-top-left-color: #0ff;
-	--background-top-right-color: #ff0;
+	--background-top-right-color: #000;
 	--background-bottom-right-color: #00a;
-	--background-bottom-left-color: #a00;
+	--background-bottom-left-color: #f0f;
 }
 
 a {
@@ -78,6 +78,7 @@ a[href*='npm'] {
 	font-weight: 900;
 	color: transparent;
 	background-clip: text;
+	-webkit-background-clip: text;
 	text-align: center;
 	display: inline;
 	--background-top-left-color: #fff;

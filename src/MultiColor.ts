@@ -1,5 +1,4 @@
 import Color from 'colorjs.io'
-import { Polar } from './Polar'
 import { Srgb } from './Srgb'
 
 /**
@@ -23,12 +22,23 @@ export class MultiColor extends HTMLElement {
 					height: 100%;
 					visibility: hidden;
 				}
+
+				img {
+					position: absolute;
+					inset: 0;
+					width: 100%;
+					height: 100%;
+					visibility: hidden;
+				}
 			</style>
+			<img />
 			<canvas></canvas>
 			<slot></slot>
 		`
+		let oldUrl = ''
 		const canvas = shadowRoot.querySelector('canvas') as HTMLCanvasElement,
 			context = canvas.getContext('2d')!,
+			image = shadowRoot.querySelector('img') as HTMLImageElement,
 			redraw = () => {
 				const style = getComputedStyle(this),
 					topLeft = new Color(
@@ -42,14 +52,22 @@ export class MultiColor extends HTMLElement {
 					),
 					bottomRight = new Color(
 						style.getPropertyValue('--background-bottom-right-color') || '#0000'
-					)
+					),
+					dataUrl = draw(canvas, context, [
+						topLeft,
+						topRight,
+						bottomLeft,
+						bottomRight,
+					])
 
-				this.style.backgroundImage = draw(context, [
-					topLeft,
-					topRight,
-					bottomLeft,
-					bottomRight,
-				])
+				// when preload is complete, apply the image to the div
+				image.onload = () => {
+					this.style.backgroundImage = `${oldUrl} url(${dataUrl})`
+					oldUrl = `url(${dataUrl})`
+				}
+
+				// setting 'src' actually starts the preload
+				image.src = dataUrl
 			}
 
 		new ResizeObserver(redraw).observe(this)
@@ -68,27 +86,28 @@ customElements.define('multi-color', MultiColor)
  * @param corners
  * @returns png data url
  */
-function draw(context: CanvasRenderingContext2D, corners: Color[]) {
-	context.canvas.width = context.canvas.clientWidth
-	context.canvas.height = context.canvas.clientHeight
+function draw(
+	canvas: HTMLCanvasElement,
+	context: CanvasRenderingContext2D,
+	corners: Color[]
+) {
+	const { clientWidth, clientHeight } = canvas
+	canvas.width = clientWidth
+	canvas.height = clientHeight
 
-	const { width, height } = context.canvas,
-		imageData = context.getImageData(0, 0, width, height),
+	const imageData = context.createImageData(clientWidth, clientHeight),
 		{ data } = imageData,
+		dataCopy = new Uint8ClampedArray(data),
 		[topLeft, topRight, bottomLeft, bottomRight] = corners.map(color => {
 			const [L, a, b] = color.to('oklab', { inGamut: true }).coords
 			return [L, a, b, color.alpha]
-		}),
-		nW = Polar({ a: topLeft![1]!, b: topLeft![2]! }).C,
-		nE = Polar({ a: topRight![1]!, b: topRight![2]! }).C,
-		sW = Polar({ a: bottomLeft![1]!, b: bottomLeft![2]! }).C,
-		sE = Polar({ a: bottomRight![1]!, b: bottomRight![2]! }).C
+		})
 
-	for (let i = 0; i < width; i++) {
-		for (let j = 0; j < height; j++) {
+	for (let i = 0; i < clientWidth; i++) {
+		for (let j = 0; j < clientHeight; j++) {
 			// parameterize the rectangle
-			const p = i / width,
-				q = j / height,
+			const p = i / (clientWidth - 1),
+				q = j / (clientHeight - 1),
 				lcha = new Array<number>(4)
 
 			// linear interpolation
@@ -100,40 +119,31 @@ function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 					bottomRight![k]! * p * q
 			}
 
-			// transform to polar interpolation
-			let [L, a, b, alpha] = lcha,
-				{ C } = Polar({ a: a!, b: b! }),
-				thing =
-					nW * (1 - p) * (1 - q) +
-					nE * p * (1 - q) +
-					sW * q * (1 - p) +
-					sE * p * q
-			a! *= thing / C
-			b! *= thing / C
-
-			const // transform from OkLab to sRGB space
+			// TODO: fix this to actually be correct
+			const [L, a, b, alpha] = lcha,
+				// transform from OkLab to sRGB space
 				sRGB = Srgb({ L: L!, a: a!, b: b! }),
 				// gamma correction for display
-				[red, green, blue] = sRGB.map(x => Math.pow(x, 1.0)),
+				[red, green, blue] = sRGB.map(x => Math.pow(x, 2.2)),
 				// coordinate pixel indices
-				x = j * (width * 4) + i * 4,
+				x = j * (clientWidth * 4) + i * 4,
 				[y, z, w] = [x + 1, x + 2, x + 3]
 
 			// set pixel values
-			data[x!] = red! * 255
-			data[y!] = green! * 255
-			data[z!] = blue! * 255
-			data[w!] = alpha! * 255
+			dataCopy[x!] = Math.floor(red! * 255)
+			dataCopy[y!] = Math.floor(green! * 255)
+			dataCopy[z!] = Math.floor(blue! * 255)
+			dataCopy[w!] = Math.floor(alpha! * 255)
 		}
 	}
 
 	// draw image
-	imageData.data.set(data)
+	imageData.data.set(dataCopy)
 	context.putImageData(imageData, 0, 0)
 
 	// export image to data url
 	const dataUrl = context.canvas.toDataURL()
 
 	// set background image
-	return `url(${dataUrl})`
+	return dataUrl
 }
