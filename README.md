@@ -26,7 +26,7 @@ multi-color {
 ### node
 
 ```sh
-npm i @domrall/multi-color
+npm i @domrally/multi-color
 ```
 
 ```jsx
@@ -38,8 +38,11 @@ export default function () {
 ### browser
 
 ```html
+<!DOCTYPE html>
+
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<script type="module">
 			import 'https://cdn.jsdelivr.net/npm/@domrally/multi-color/index.js'
 		</script>
