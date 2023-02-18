@@ -32,9 +32,9 @@ body {
 	animation-direction: alternate;
 	z-index: -1;
 	--background-top-left-color: #0ff;
-	--background-top-right-color: #f0f;
-	--background-bottom-left-color: #f0f;
-	--background-bottom-right-color: #00f;
+	--background-top-right-color: #ff0;
+	--background-bottom-right-color: #00a;
+	--background-bottom-left-color: #a00;
 }
 
 a {
@@ -80,8 +80,8 @@ a[href*='npm'] {
 	background-clip: text;
 	text-align: center;
 	display: inline;
-	--background-top-left-color: #ffa;
-	--background-top-right-color: #fff;
+	--background-top-left-color: #fff;
+	--background-top-right-color: #ffb;
 	--background-bottom-left-color: #fff;
 	--background-bottom-right-color: #fff;
 }

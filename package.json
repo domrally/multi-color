@@ -3,6 +3,8 @@
 	"version": "0.1.1",
 	"description": "false color gradients",
 	"main": "index.js",
+	"module": "index.js",
+	"types": "typings/index.d.ts",
 	"files": [
 		"typings/**/*"
 	],

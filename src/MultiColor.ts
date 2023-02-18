@@ -9,7 +9,7 @@ export class MultiColor extends HTMLElement {
 	constructor() {
 		super()
 
-		const shadowRoot = this.attachShadow({ mode: 'closed' })
+		const shadowRoot = this.attachShadow({ mode: 'open' })
 		shadowRoot.innerHTML = `
 			<style>
 				:host {
@@ -63,9 +63,10 @@ export class MultiColor extends HTMLElement {
 customElements.define('multi-color', MultiColor)
 
 /**
- *
- * @param element -
- * @returns
+ * draws the gradient to a css image url
+ * @param context
+ * @param corners
+ * @returns png data url
  */
 function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 	context.canvas.width = context.canvas.clientWidth
@@ -113,7 +114,7 @@ function draw(context: CanvasRenderingContext2D, corners: Color[]) {
 			const // transform from OkLab to sRGB space
 				sRGB = Srgb({ L: L!, a: a!, b: b! }),
 				// gamma correction for display
-				[red, green, blue] = sRGB.map(x => Math.pow(x, 2.2)),
+				[red, green, blue] = sRGB.map(x => Math.pow(x, 1.0)),
 				// coordinate pixel indices
 				x = j * (width * 4) + i * 4,
 				[y, z, w] = [x + 1, x + 2, x + 3]
