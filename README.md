@@ -12,6 +12,8 @@ visually balanced gradients
 
 ## use
 
+### css
+
 ```css
 multi-color {
 	--background-top-left-color: #0ff;
@@ -24,7 +26,7 @@ multi-color {
 ### node
 
 ```sh
-npm i multi-color
+npm i @domrall/multi-color
 ```
 
 ```jsx
@@ -38,10 +40,20 @@ export default function () {
 ```html
 <html>
 	<head>
-		<script src="https://cdn.jsdelivr.net/npm/multi-color/index.js"></script>
+		<script type="module">
+			import 'https://cdn.jsdelivr.net/npm/@domrally/multi-color/index.js'
+		</script>
 	</head>
 
 	<body>
+		<style>
+			multi-color {
+				--background-top-left-color: #0ff;
+				--background-top-right-color: #000;
+				--background-bottom-right-color: #00a;
+				--background-bottom-left-color: #f0f;
+			}
+		</style>
 		<multi-color></multi-color>
 	</body>
 </html>
