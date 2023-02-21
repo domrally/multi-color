@@ -43,6 +43,7 @@ a {
 	cursor: pointer;
 	display: grid;
 	place-content: center;
+	color: #000;
 	filter: invert();
 }
 
